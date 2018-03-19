@@ -20,7 +20,8 @@ Help:
 	    -U, --user-file  [File Path]     	File containing list of usernames
 	    -P, --pass-file  [File Path]     	File containing list of passwords
 	    -t, --target     [URL]           	Target VPN server example: https://vpn.target.com
-	    -l, --login-path  [Login Path]   	Path to login page.  Default: /+webvpn+/index.html
+	    -l, --login-path [Login Path]    	Path to login page.  Default: /+webvpn+/index.html
+	    -g, --group      [Group Name]    	Group name for VPN.  Default: No Group   
 	    -v, --verbose                    	Enables verbose output
 
 
