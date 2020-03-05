@@ -13,7 +13,7 @@ Simply clone this repo and run
 
 Install the gem
 --------
-$ gem install ciscobruter
+	$ gem install ciscobruter
 
 
 Help:
