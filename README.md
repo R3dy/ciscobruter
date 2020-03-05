@@ -1,13 +1,19 @@
+[![Gem Version](https://badge.fury.io/rb/ciscobruter.svg)](https://badge.fury.io/rb/ciscobruter)
+
 Ciscobruter.rb
 ==============
 Brute force Cisco SSL VPN's that don't use 2-factor authentication
 
 
-Install:
+Install from source:
 --------
 Simply clone this repo and run
 
 	$ bundle install
+
+Install the gem
+--------
+$ gem install ciscobruter
 
 
 Help:
